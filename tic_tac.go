@@ -19,9 +19,16 @@ type Board [3][3]BoardMark
 
 // eval a board and return the winner (EMPTY = no winner)
 
-func eval(bb /* Board */ [3][3]BoardMark) BoardMark {
+func mark_to_s(mm BoardMark) string{
+	var s = []string{ " ", "X", "O" }[mm]
+	return s
+}
+
+
+func eval(bb Board) BoardMark {
 	var mark BoardMark = m_EMPTY
 	for mark = m_X; mark <= m_O ; mark +=1 {
+		// fmt.Println("eval mark = " +  mark_to_s(mark))
 		// check rows and cols
 		for ii := 0; ii <= 2 ; ii += 1 {
 			if (bb[ii][0] == mark && bb[ii][1] == mark && bb[ii][2] == mark) ||
@@ -31,7 +38,7 @@ func eval(bb /* Board */ [3][3]BoardMark) BoardMark {
 		}
 		// check diagonals
 		if (bb[0][0] == mark && bb[1][1] == mark && bb[2][2] == mark) ||
-			(bb[1][0] == mark && bb[1][1] == mark && bb[0][2] == mark) {
+			(bb[2][0] == mark && bb[1][1] == mark && bb[0][2] == mark) {
 				return mark
 		}
 	}
@@ -39,16 +46,20 @@ func eval(bb /* Board */ [3][3]BoardMark) BoardMark {
 }
 
 
-func mark_to_s(mm BoardMark) string{
-	var s = []string{ " ", "X", "O" }[mm]
-	return s
-}
-
 func mark_alt(mm BoardMark) BoardMark {
-	switch mm 
+	switch mm {
+	case m_X:
+		return m_O
+	case m_O:
+		return m_X
+	default:
+		fmt.Println("error in mark_alt")
+		os.Exit(-1)
+	}
+	return m_EMPTY
 }
 
-func print_board(bb Board /* [3][3]BoardMark*/) {
+func print_board(bb Board) {
 	for ii := 0; ii <= 2 ; ii += 1 {
 		fmt.Println(" "  + mark_to_s(bb[ii][0]) + " | " + mark_to_s(bb[ii][1]) + " | " + mark_to_s(bb[ii][2]) )
 		if ii !=2 {
@@ -71,7 +82,9 @@ func play(bb Board, next_move BoardMark, depth int) {
 				// if winner != m_EMPTY {
 					fmt.Println("winner = " + mark_to_s(winner))
 				// }
-				play(candidate, next_move == m_X ? m_O : m_X, depth + 1)
+
+				// recurse
+				play(candidate, mark_alt(next_move), depth + 1)
 				fmt.Println()
 				fmt.Println()
 			}
