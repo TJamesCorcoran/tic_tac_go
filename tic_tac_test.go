@@ -142,3 +142,17 @@ func Test_mark_alt(t *testing.T) {
 	}
 
 }
+
+func Test_play(t *testing.T) {
+	bb := Board{
+		{m_X,     m_EMPTY, m_EMPTY},
+		{m_X,     m_EMPTY, m_EMPTY},
+		{m_EMPTY, m_EMPTY, m_EMPTY},
+	}
+	x, y := play(bb, m_X, 0)
+	if x != 0 || y != 2   {
+		t.Fatalf("expected x == 0 (was %d), y == 2 (was %d)", x, y )
+	}
+
+	
+}

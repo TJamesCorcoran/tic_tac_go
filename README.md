@@ -4,6 +4,10 @@ A quick-and-dirty tic-tac-toe engine to teach myself Go.
 
 Would you like to play a game?
 
+# Run tests
+
+go test
+
 # Running
 
 go run .

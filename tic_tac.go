@@ -68,7 +68,10 @@ func print_board(bb Board) {
 	}
 }
 
-func play(bb Board, next_move BoardMark, depth int) {
+// returns an X, Y pair that guarantees that 'O' player can win, no matter what X does
+// return 0,0 if no such move exits
+//
+func play(bb Board, next_move BoardMark, depth int) (int, int) {
 	possible_moves := 0
 	for ii := 0; ii <= 2 ; ii += 1 {
 		for jj := 0; jj <= 2 ; jj += 1 {
@@ -76,29 +79,30 @@ func play(bb Board, next_move BoardMark, depth int) {
 				possible_moves += 1
 				candidate := Board(bb)
 				candidate[ii][jj] = next_move
-				fmt.Println("candidate move")
-				print_board(candidate)
+				fmt.Printf("candidate move: x = %d, y =%d" , ii, jj)
+				// print_board(candidate)
 				winner := eval(candidate)
-				// if winner != m_EMPTY {
-					fmt.Println("winner = " + mark_to_s(winner))
-				// }
+				fmt.Println("winner = " + mark_to_s(winner))
 
 				// recurse
-				play(candidate, mark_alt(next_move), depth + 1)
+				if winner == m_EMPTY {
+					play(candidate, mark_alt(next_move), depth + 1)
+				} else {
+					return ii, jj
+				}
 				fmt.Println()
 				fmt.Println()
 			}
 		}
 	}
 	if possible_moves == 0 {
+		fmt.Println("exiting")
 		os.Exit(0)
 	}
+	return 0,0
 }
 
 func main() {
-	// fmt.Println(m_X)
-	// fmt.Println(m_O)
-	// fmt.Println(m_EMPTY)
 
 	fmt.Println("Would you like to play a game?")
 
@@ -108,12 +112,6 @@ func main() {
 		{m_EMPTY, m_EMPTY, m_EMPTY},
 		{m_EMPTY, m_EMPTY, m_EMPTY},
 	}
-
-	// cc := Board(bb)
-	// cc[0][0] = m_X
-
-	// print_board(bb)
-	// print_board(cc)
 	
 	play(bb, m_O, 0)
 	
